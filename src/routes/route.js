@@ -1,6 +1,10 @@
 const router = require('express').Router()
-const home = require('../controller/paginaInicial')
+const homeController = require('../controller/homeController')
+const loginController = require('../controller/loginController')
+const registerController = require('../controller/registerController')
 
-router.get('/', home)
+router.get('/home', homeController)
+router.get('/login', loginController)
+router.get('/register', registerController)
 
 module.exports = router
