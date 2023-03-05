@@ -2,4 +2,12 @@ const home = (req, res) => {
     res.render('index')
 }
 
-module.exports = home
+const treatPost = (req, res) => {
+    res.send(req.body)
+    return;
+}
+
+module.exports = {
+    home,
+    treatPost
+}
