@@ -1,6 +1,8 @@
+require('dotenv').config()
 const express = require('express')
 const path = require('path')
 const app = express()
+const mongoose = require('mongoose')
 const session = require('express-session')
 const flash = require('connect-flash');
 const helmet = require('helmet')
@@ -9,6 +11,13 @@ const middlewares = require('./src/middlewares/middleware')
 const routes = require(path.resolve(__dirname, 'route'))
 const viewPagina = path.resolve(__dirname, 'src', 'views')
 const port = 3000
+
+mongoose.connect(process.env.CONNECTMONGO)
+.then( () => {
+  console.log('Connected database'),
+  app.emit('Connected database')
+})
+.catch(e => console.log(e))
 
 app.use(helmet())
 app.use(express.urlencoded({extended:true}))
@@ -24,6 +33,7 @@ const sessionOptions = session({
       httpOnly: true
     }
 });
+
 app.use(sessionOptions);
 app.use(flash());
 
@@ -35,9 +45,9 @@ app.use(middlewares.checkCsrfError)
 app.use(middlewares.csrfMiddleware)
 app.use(routes)
 
-console.log()
-
-app.listen(3000, () => {
+app.on('Connected database', () => {
+  app.listen(3000, () => {
     console.log("http://localhost:3000/home/")
     console.log(`Server connected to port ${port}`)
+  })
 })
